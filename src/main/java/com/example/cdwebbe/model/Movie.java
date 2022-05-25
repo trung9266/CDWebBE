@@ -1,29 +1,55 @@
 package com.example.cdwebbe.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
-@NoArgsConstructor
 @Table(name = "movie")
-@Getter
-@Setter
 public class Movie {
     @Id
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title")
-    private String title;
+    @NotBlank
+    @Size(max = 40)
+    private String name;
 
-    @Column(name = "url")
+    public Movie(Long id, String name, String url) {
+        this.id = id;
+        this.name = name;
+        this.url = url;
+    }
+
+    @NotBlank
+    @Size(max = 255)
     private String url;
 
+    public Movie() {
 
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 }
