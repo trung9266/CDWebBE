@@ -13,18 +13,17 @@ public class Movie {
 
     @NotBlank
     @Size(max = 40)
-    private String name;
-
-    public Movie(Long id, String name, String url) {
-        this.id = id;
-        this.name = name;
-        this.url = url;
-    }
+    private String slug;
 
     @NotBlank
     @Size(max = 255)
     private String url;
 
+    public Movie(Long id, String slug, String url) {
+        this.id = id;
+        this.slug = slug;
+        this.url = url;
+    }
     public Movie() {
 
     }
@@ -37,12 +36,12 @@ public class Movie {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getSlug() {
+        return slug;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSlug(String slug) {
+        this.slug = slug;
     }
 
     public String getUrl() {

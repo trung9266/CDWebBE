@@ -11,6 +11,7 @@ import com.example.cdwebbe.payload.SignUpRequest;
 import com.example.cdwebbe.repository.RoleRepository;
 import com.example.cdwebbe.repository.UserRepository;
 import com.example.cdwebbe.security.JwtTokenProvider;
+import com.example.cdwebbe.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -46,12 +46,15 @@ public class AuthController {
     @Autowired
     JwtTokenProvider tokenProvider;
 
+    @Autowired
+    UserService userService;
+
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsernameOrEmail(),
+                        loginRequest.getUsername(),
                         loginRequest.getPassword()
                 )
         );
@@ -65,12 +68,12 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         System.out.print(signUpRequest);
-        if(userRepository.existsByUsername(signUpRequest.getUsername())) {
+        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
                     HttpStatus.BAD_REQUEST);
         }
 
-        if(userRepository.existsByEmail(signUpRequest.getEmail())) {
+        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             return new ResponseEntity(new ApiResponse(false, "Email Address already in use!"),
                     HttpStatus.BAD_REQUEST);
         }
@@ -94,24 +97,65 @@ public class AuthController {
 
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
     }
+
+    @PostMapping("/signupadmin")
+    public ResponseEntity<?> registerAdmin(@Valid @RequestBody SignUpRequest signUpRequest) {
+        System.out.print(signUpRequest);
+        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+            return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+            return new ResponseEntity(new ApiResponse(false, "Email Address already in use!"),
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        // Creating user's account
+        User user = new User(signUpRequest.getName(), signUpRequest.getUsername(),
+                signUpRequest.getEmail(), signUpRequest.getPassword());
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        Role userRole = roleRepository.findByName(RoleName.ROLE_ADMIN)
+                .orElseThrow(() -> new AppException("User Role not set."));
+
+        user.setRoles(Collections.singleton(userRole));
+
+        User result = userRepository.save(user);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/users/{username}")
+                .buildAndExpand(result.getUsername()).toUri();
+
+        return ResponseEntity.created(location).body(new ApiResponse(true, "Admin registered successfully"));
+    }
+
     @GetMapping("/checkvalidname")
     public ResponseEntity<?> checkValidName(@RequestParam(required = false) String name) {
-        if(userRepository.existsByUsername(name)) {
+        if (userRepository.existsByUsername(name)) {
             return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
                     HttpStatus.ACCEPTED);
         }
-        return new ResponseEntity(new ApiResponse(true, ""),HttpStatus.ACCEPTED);
+        return new ResponseEntity(new ApiResponse(true, ""), HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/checkvalidemail")
     public ResponseEntity<?> checkValidEmail(@RequestParam(required = false) String email) {
-        if(userRepository.existsByEmail(email)) {
+        if (userRepository.existsByEmail(email)) {
             return new ResponseEntity(new ApiResponse(false, "Email is already taken!"),
                     HttpStatus.ACCEPTED);
         }
-        return new ResponseEntity(new ApiResponse(true, ""),HttpStatus.ACCEPTED);
+        return new ResponseEntity(new ApiResponse(true, ""), HttpStatus.ACCEPTED);
     }
 
+    @DeleteMapping("/deleteuser/{id}")
+    public ResponseEntity deleteClass(
+            @PathVariable long id
+    ) {
+        String message = userService.deleteUser(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Delete user success");
+    }
 
 
 }
