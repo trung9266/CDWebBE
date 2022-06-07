@@ -2,10 +2,12 @@ package com.example.cdwebbe.model;
 
 import com.example.cdwebbe.model.audit.DateAudit;
 import org.hibernate.annotations.NaturalId;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
@@ -42,6 +44,15 @@ public class User extends DateAudit {
     @Size(max = 100)
     private String password;
 
+    @Nullable
+    private String gender;
+
+    @Nullable
+    private String address;
+
+    @Nullable
+    private String phone;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -50,6 +61,16 @@ public class User extends DateAudit {
 
     public User() {
 
+    }
+
+    public User(String name, String username, String email, String password, String gender, String address, String phone) {
+        this.name = name;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.gender = gender;
+        this.address = address;
+        this.phone = phone;
     }
 
     public User(String name, String username, String email, String password) {
@@ -105,5 +126,29 @@ public class User extends DateAudit {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

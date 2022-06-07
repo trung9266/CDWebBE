@@ -22,17 +22,30 @@ public class UserPrincipal implements UserDetails {
 
     @JsonIgnore
     private String password;
+
+    @JsonIgnore
+    private String gender;
+
+    @JsonIgnore
+    private String address;
+
+    @JsonIgnore
+    private String phone;
+
     @JsonIgnore
     private Set<Role> roles = new HashSet<>();
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserPrincipal(Long id, String name, String username, String email, String password, Set<Role> roles, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrincipal(Long id, String name, String username, String email, String password, String gender, String address, String phone, Set<Role> roles, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.gender = gender;
+        this.address = address;
+        this.phone = phone;
         this.roles=roles;
         this.authorities = authorities;
     }
@@ -48,6 +61,9 @@ public class UserPrincipal implements UserDetails {
                 user.getUsername(),
                 user.getEmail(),
                 user.getPassword(),
+                user.getGender(),
+                user.getAddress(),
+                user.getPhone(),
                 user.getRoles(),
                 authorities
         );
@@ -82,6 +98,30 @@ public class UserPrincipal implements UserDetails {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     @Override

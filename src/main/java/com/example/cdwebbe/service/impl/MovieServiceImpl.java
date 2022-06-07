@@ -27,10 +27,14 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public Movie addMovie(MovieRequest movie) {
-        Movie mv = new Movie();
-        mv.setSlug(movie.getSlug());
-        mv.setUrl(movie.getUrl());
-        return movieRepository.save(mv);
+        boolean isExist = movieRepository.existsBySlug(movie.getSlug());
+        if (!isExist) {
+            Movie mv = new Movie();
+            mv.setSlug(movie.getSlug());
+            mv.setUrl(movie.getUrl());
+            return movieRepository.save(mv);
+        }
+        return null;
     }
 
 
