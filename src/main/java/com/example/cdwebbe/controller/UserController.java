@@ -32,7 +32,7 @@ public class UserController {
 
     @GetMapping("/me")
     public UserInfo getCurrentUser(@CurrentUser UserPrincipal currentUser) {
-        UserInfo userSummary = new UserInfo(currentUser.getId(), currentUser.getUsername(), currentUser.getName(), currentUser.getGender(), currentUser.getAddress(), currentUser.getPhone(), currentUser.getRoles());
+        UserInfo userSummary = new UserInfo(currentUser.getId(), currentUser.getUsername(), currentUser.getName(),currentUser.getEmail(), currentUser.getGender(), currentUser.getAddress(), currentUser.getPhone(), currentUser.getRoles());
         return userSummary;
     }
     @GetMapping("getalluser")
@@ -45,7 +45,12 @@ public class UserController {
         User user = userService.getUserById(id);
         if(user!=null){
             user.setName(u.getName());
-            user.setEmail(u.getEmail());
+            if (userRepository.findByEmail(u.getEmail()).isPresent()){
+
+            }else{
+                user.setEmail(u.getEmail());
+            }
+
             user.setGender(u.getGender());
             user.setAddress(u.getAddress());
             user.setPhone(u.getPhone());

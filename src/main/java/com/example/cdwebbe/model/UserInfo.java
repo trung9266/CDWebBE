@@ -9,6 +9,7 @@ public class UserInfo {
     private Long id;
     private String username;
     private String name;
+    private String email;
     private String gender;
     private String address;
     private String phone;
@@ -16,10 +17,11 @@ public class UserInfo {
 
     private Set<Role> roles = new HashSet<>();
 
-    public UserInfo(Long id, String username, String name, String gender, String address, String phone, Set<Role> roles) {
+    public UserInfo(Long id, String username, String name, String email, String gender, String address, String phone, Set<Role> roles) {
         this.id = id;
         this.username = username;
         this.name = name;
+        this.email = email;
         this.gender = gender;
         this.address = address;
         this.phone = phone;
@@ -80,5 +82,13 @@ public class UserInfo {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
