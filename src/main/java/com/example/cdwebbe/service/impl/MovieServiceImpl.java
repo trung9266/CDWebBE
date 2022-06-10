@@ -31,6 +31,14 @@ public class MovieServiceImpl implements MovieService {
         if (!isExist) {
             Movie mv = new Movie();
             mv.setSlug(movie.getSlug());
+            mv.setTitle(movie.getTitle());
+            mv.setPosterUrl(movie.getPosterUrl());
+            mv.setBackdropUrl(movie.getBackdropUrl());
+            mv.setGenres(movie.getGenres());
+            mv.setReleaseDate(movie.getReleaseDate());
+            mv.setOverview(movie.getOverview());
+            mv.setProductionCompanies(movie.getProductionCompanies());
+            mv.setProductionCountries(movie.getProductionCountries());
             mv.setUrl(movie.getUrl());
             return movieRepository.save(mv);
         }
