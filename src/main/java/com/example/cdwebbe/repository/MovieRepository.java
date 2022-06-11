@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Long> {
-    Movie findBySlug(Long slug);
-    boolean existsBySlug(Long slug);
+    Movie findBySlug(String slug);
+    boolean existsBySlug(String slug);
 }

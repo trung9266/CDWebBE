@@ -2,6 +2,9 @@ package com.example.cdwebbe.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -19,7 +22,7 @@ public class Movie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull
-    private Long slug;
+    private String slug;
     @NotNull
     private String title;
     @NotNull
@@ -28,31 +31,44 @@ public class Movie {
     @NotNull
     @Column(name = "backdrop_path")
     private String backdropUrl;
-    @ElementCollection
-    @CollectionTable(name = "genres", joinColumns = @JoinColumn(name = "slug"))
-    @Column(name = "name")
-    private List<String> genres;
+    @OneToMany(
+            mappedBy = "movie",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER,
+            orphanRemoval = true
+    )
+    @Fetch(FetchMode.SELECT)
+    @BatchSize(size = 30)
+    private List<Genres> genres = new ArrayList<>();
     @Column(name = "release_date")
     private String releaseDate;
     @Column(name = "overview")
     private String overview;
-    @ElementCollection
-    @CollectionTable(name = "production_companies", joinColumns = @JoinColumn(name = "slug"))
-    @Column(name = "name")
-    private List<String> productionCompanies;
-    @ElementCollection
-    @CollectionTable(name = "production_countries", joinColumns = @JoinColumn(name = "slug"))
-    @Column(name = "name")
-    private List<String> productionCountries;
+    @OneToMany(
+            mappedBy = "movie",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER,
+            orphanRemoval = true
+    )
+    @Fetch(FetchMode.SELECT)
+    private List<ProductionCompany> productionCompanies = new ArrayList<>();
+    @OneToMany(
+            mappedBy = "movie",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER,
+            orphanRemoval = true
+    )
+    @Fetch(FetchMode.SELECT)
+    private List<ProductionCountries> productionCountries = new ArrayList<>();
     @NotNull
     private String url;
 
 
-    public Movie(Long id, Long slug, String title, String posterUrl, List<String> genres, String releaseDate, String overview, List<String> productionCompanies, List<String> productionCountries, String url) {
-        this.id = id;
+    public Movie(String slug, String title, String posterUrl, String backdropUrl, List<Genres> genres, String releaseDate, String overview, List<ProductionCompany> productionCompanies, List<ProductionCountries> productionCountries, String url) {
         this.slug = slug;
         this.title = title;
         this.posterUrl = posterUrl;
+        this.backdropUrl = backdropUrl;
         this.genres = genres;
         this.releaseDate = releaseDate;
         this.overview = overview;
@@ -64,4 +80,22 @@ public class Movie {
     public Movie() {
 
     }
+    public void addGenres(Genres gen) {
+        genres.add(gen);
+        gen.setMovie(this);
+    }
+    public void addProductionCompanies(ProductionCompany company) {
+        productionCompanies.add(company);
+        company.setMovie(this);
+    }
+    public void addProductionCountries(ProductionCountries countries) {
+        productionCountries.add(countries);
+        countries.setMovie(this);
+    }
+
+    public void removeGenres(Genres gen) {
+        genres.remove(gen);
+        gen.setMovie(null);
+    }
+
 }

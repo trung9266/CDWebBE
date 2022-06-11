@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -24,23 +25,24 @@ public class MovieController {
     MovieRepository movieRepository;
 
     @GetMapping("/{slug}")
-    public ResponseEntity<Movie> getMovieBySlug(@PathVariable(value = "slug") Long slug){
+    public ResponseEntity<Movie> getMovieBySlug(@PathVariable(value = "slug") String slug){
         Movie result = movieService.getMovieBySlug(slug);
         return ResponseEntity.ok(result);
-    }
-    @PostMapping("/addmovie")
-    public ResponseEntity addMovie(@RequestBody MovieRequest movieRequest){
-        Movie result = movieService.addMovie(movieRequest);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/{id}")
-                .buildAndExpand(result.getId()).toUri();
-
-        return ResponseEntity.created(location)
-                .body("Movie Created Successfully");
     }
     @GetMapping("/getall")
     public ResponseEntity getAllMovie(){
         List<Movie> result = movieService.getAllMovie();
         return ResponseEntity.ok(result);
+    }
+    @PostMapping("/addmovie")
+    public ResponseEntity<?> createPoll(@Valid @RequestBody MovieRequest movieRequest) {
+        Movie movie = movieService.createMovie(movieRequest);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/{movieId}")
+                .buildAndExpand(movie.getId()).toUri();
+
+        return ResponseEntity.created(location)
+                .body("Movie Created Successfully");
     }
 }

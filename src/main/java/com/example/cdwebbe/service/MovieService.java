@@ -6,7 +6,8 @@ import com.example.cdwebbe.payload.MovieRequest;
 import java.util.List;
 
 public interface MovieService{
-    Movie getMovieBySlug(Long slug);
+    Movie getMovieBySlug(String slug);
     List<Movie> getAllMovie();
-    Movie addMovie(MovieRequest movie);
+
+    Movie createMovie(MovieRequest movieRequest);
 }

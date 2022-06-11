@@ -17,6 +17,7 @@
         <java.version>11</java.version>
         <jjwt.version>0.11.5</jjwt.version>
         <swagger.version>2.9.2</swagger.version>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
     </properties>
     <dependencies>
         <dependency>
