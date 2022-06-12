@@ -1,6 +1,7 @@
 package com.example.cdwebbe.model;
 
 import com.example.cdwebbe.model.Movie;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -19,6 +20,7 @@ public class Genres {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JsonIgnore
     @JoinColumn(name = "movie_id", nullable = false)
     private Movie movie;
 

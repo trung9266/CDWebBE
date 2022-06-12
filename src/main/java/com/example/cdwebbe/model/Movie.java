@@ -1,5 +1,6 @@
 package com.example.cdwebbe.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
@@ -7,6 +8,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -42,6 +44,7 @@ public class Movie {
     private List<Genres> genres = new ArrayList<>();
     @Column(name = "release_date")
     private String releaseDate;
+    @Lob
     @Column(name = "overview")
     private String overview;
     @OneToMany(

@@ -36,13 +36,17 @@ public class MovieController {
     }
     @PostMapping("/addmovie")
     public ResponseEntity<?> createPoll(@Valid @RequestBody MovieRequest movieRequest) {
-        Movie movie = movieService.createMovie(movieRequest);
+        boolean isExist = movieRepository.existsBySlug(movieRequest.getSlug());
+        if (!isExist){
+            Movie movie = movieService.createMovie(movieRequest);
 
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/{movieId}")
-                .buildAndExpand(movie.getId()).toUri();
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest().path("/{movieId}")
+                    .buildAndExpand(movie.getId()).toUri();
 
-        return ResponseEntity.created(location)
-                .body("Movie Created Successfully");
+            return ResponseEntity.created(location)
+                    .body("Movie Created Successfully");
+        }
+        return ResponseEntity.ok("Movie is exist");
     }
 }

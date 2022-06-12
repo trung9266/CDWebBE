@@ -24,6 +24,7 @@ public class ProductionCountries {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JsonIgnore
     @JoinColumn(name = "movie_id", nullable = false)
     private Movie movie;
 
