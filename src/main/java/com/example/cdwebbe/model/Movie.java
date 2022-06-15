@@ -65,6 +65,9 @@ public class Movie {
     private List<ProductionCountries> productionCountries = new ArrayList<>();
     @NotNull
     private String url;
+    @JsonIgnore
+    @OneToMany(mappedBy = "movie")
+    private List<WishListItem> wishListItems;
 
 
     public Movie(String slug, String title, String posterUrl, String backdropUrl, List<Genres> genres, String releaseDate, String overview, List<ProductionCompany> productionCompanies, List<ProductionCountries> productionCountries, String url) {

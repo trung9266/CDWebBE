@@ -10,4 +10,5 @@ public interface MovieService{
     List<Movie> getAllMovie();
 
     Movie createMovie(MovieRequest movieRequest);
+    Movie findByIdMovie(long id);
 }

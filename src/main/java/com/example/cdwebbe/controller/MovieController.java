@@ -35,7 +35,7 @@ public class MovieController {
         return ResponseEntity.ok(result);
     }
     @PostMapping("/addmovie")
-    public ResponseEntity<?> createPoll(@Valid @RequestBody MovieRequest movieRequest) {
+    public ResponseEntity<?> createMovie(@Valid @RequestBody MovieRequest movieRequest) {
         boolean isExist = movieRepository.existsBySlug(movieRequest.getSlug());
         if (!isExist){
             Movie movie = movieService.createMovie(movieRequest);

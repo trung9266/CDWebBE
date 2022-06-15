@@ -59,4 +59,9 @@ public class MovieServiceImpl implements MovieService {
         return null;
     }
 
+    @Override
+    public Movie findByIdMovie(long id) {
+        return this.movieRepository.findById(id).get();
+    }
+
 }

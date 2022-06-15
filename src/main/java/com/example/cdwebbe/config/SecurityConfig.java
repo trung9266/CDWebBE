@@ -93,6 +93,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .permitAll()
                     .antMatchers("/api/movie/**")
                         .permitAll()
+                    .antMatchers("/api/wishlist/**")
+                        .permitAll()
                     .anyRequest()
                         .authenticated();
 
