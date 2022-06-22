@@ -10,7 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.List;
 
 public interface IWishListService {
-    Movie addMovieWishList(Long id, Long id1);
+    Movie addMovieWishList(Long id, String slug);
 
     List<WishListItem> findAll(Specification<WishListItem> spec, Pageable pageable);
     WishList findByUser(User user);

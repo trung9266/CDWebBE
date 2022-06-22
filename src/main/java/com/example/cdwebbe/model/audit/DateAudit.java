@@ -5,8 +5,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
 
@@ -17,6 +16,9 @@ import java.time.Instant;
         allowGetters = true
 )
 public abstract class DateAudit implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @CreatedDate
     private Instant createdAt;

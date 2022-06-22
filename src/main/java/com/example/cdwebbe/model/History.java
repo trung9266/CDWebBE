@@ -1,6 +1,5 @@
 package com.example.cdwebbe.model;
 
-
 import com.example.cdwebbe.model.audit.BaseEntity;
 import com.example.cdwebbe.model.audit.DateAudit;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -17,17 +16,16 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "wishList")
-public class WishList extends DateAudit {
+@Table(name = "history")
+public class History extends DateAudit {
     @JsonIgnore
-    @OneToMany(mappedBy = "wishList")
-    private List<WishListItem> wishListItems;
+    @OneToMany(mappedBy = "history")
+    private List<HistoryItem> historyItems;
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "userID", referencedColumnName = "id")
     private User user;
-
-    public WishList(User user) {
+    public History(User user) {
         this.user = user;
     }
 }

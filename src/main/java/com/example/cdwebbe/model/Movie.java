@@ -68,6 +68,9 @@ public class Movie {
     @JsonIgnore
     @OneToMany(mappedBy = "movie")
     private List<WishListItem> wishListItems;
+    @JsonIgnore
+    @OneToMany(mappedBy = "movie")
+    private List<HistoryItem> historyItem;
 
 
     public Movie(String slug, String title, String posterUrl, String backdropUrl, List<Genres> genres, String releaseDate, String overview, List<ProductionCompany> productionCompanies, List<ProductionCountries> productionCountries, String url) {

@@ -61,6 +61,9 @@ public class User extends DateAudit {
     @OneToOne(mappedBy = "user")
     private WishList wishList;
 
+    @OneToOne(mappedBy = "user")
+    private History history;
+
     public User() {
 
     }

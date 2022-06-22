@@ -18,9 +18,8 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "wishListItem")
-public class WishListItem extends DateAudit {
-
+@Table(name = "historyitem")
+public class HistoryItem extends DateAudit {
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "movie_id",referencedColumnName = "id")
@@ -28,5 +27,5 @@ public class WishListItem extends DateAudit {
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "wishListId",referencedColumnName = "id")
-    private WishList wishList ;
+    private History history ;
 }

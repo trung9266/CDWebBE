@@ -1,13 +1,10 @@
 package com.example.cdwebbe.controller;
 
-import com.example.cdwebbe.exception.NotFoundException;
 import com.example.cdwebbe.model.*;
 import com.example.cdwebbe.payload.ResponseObject;
-import com.example.cdwebbe.payload.WishListItemResponse;
+import com.example.cdwebbe.payload.HistoryItemResponse;
 import com.example.cdwebbe.payload.WishListRequest;
-import com.example.cdwebbe.security.CurrentUser;
-import com.example.cdwebbe.security.UserPrincipal;
-import com.example.cdwebbe.service.IWishListService;
+import com.example.cdwebbe.service.IHistoryService;
 import com.example.cdwebbe.service.MovieService;
 import com.example.cdwebbe.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -29,19 +24,19 @@ import org.modelmapper.ModelMapper;
 
 
 @RestController
-@RequestMapping("api/wishlist")
-public class WishListController {
+@RequestMapping("api/history")
+public class HistoryController {
     @Autowired
-    IWishListService iWishListService;
+    IHistoryService iHistoryService;
     @Autowired
     UserService userService;
     @Autowired
     ModelMapper mapper;
     @Autowired
     MovieService movieService;
-    @PostMapping("/addWishList/{slug}")
-    public ResponseEntity<?> addWishList(@PathVariable(value = "slug") String slug,@RequestBody WishListRequest info) {
-        Movie toCartResponse = iWishListService.addMovieWishList(info.getId(),slug);
+    @PostMapping("/addHistory")
+    public ResponseEntity<?> addHistory(@PathVariable(value = "slug") String slug,@RequestBody WishListRequest info) {
+        Movie toCartResponse = iHistoryService.addMovieHistory(info.getId(),slug);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(HttpStatus.OK.value(), "successful!", toCartResponse));
 
@@ -51,28 +46,27 @@ public class WishListController {
                                      @RequestParam(defaultValue ="0" ) int pageIndex, @RequestParam(defaultValue = "10") int pageSize,@RequestBody WishListRequest info){
 
         User user = this.userService.findById(info.getId());
-        WishList wishList = this.iWishListService.findByUser(user);
-        Specification<WishListItem> spec = new Specification<WishListItem>() {
+        History history = this.iHistoryService.findByUser(user);
+        Specification<HistoryItem> spec = new Specification<HistoryItem>() {
             @Override
-            public Predicate toPredicate(Root<WishListItem> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                return criteriaBuilder.equal(root.get("wishList"),wishList);
+            public Predicate toPredicate(Root<HistoryItem> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.equal(root.get("history"),history);
             }
         };
         Pageable pageable =  PageRequest.of(pageIndex,pageSize);
-        List<WishListItem> wishListItem = null;
+        List<HistoryItem> historyItem = null;
         if(action.equals("show")){
-            wishListItem = this.iWishListService.findAll(spec,  pageable);
+            historyItem = this.iHistoryService.findAll(spec,  pageable);
         }else if(action.equals("remove")){
             Movie movie = this.movieService.findByIdMovie(favProductId);
-            this.iWishListService.delete(movie);
-            wishListItem = this.iWishListService.findAll(spec,  pageable);
+            this.iHistoryService.delete(movie);
+            historyItem = this.iHistoryService.findAll(spec,  pageable);
         }
-        List<WishListItemResponse> list = new ArrayList<>();
-        for (WishListItem wishListItemEntity :wishListItem) {
-            list.add(this.mapper.map(wishListItemEntity,WishListItemResponse.class));
-
+        List<HistoryItemResponse> list = new ArrayList<>();
+        for (HistoryItem historyItemEntity :historyItem) {
+            list.add(this.mapper.map(historyItemEntity,HistoryItemResponse.class));
         }
-return ResponseEntity.ok(list);
+        return ResponseEntity.ok(list);
     }
 
 }

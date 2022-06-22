@@ -32,6 +32,7 @@ public class UserController {
 
     @GetMapping("/me")
     public UserInfo getCurrentUser(@CurrentUser UserPrincipal currentUser) {
+        System.out.println(currentUser.getId());
         UserInfo userSummary = new UserInfo(currentUser.getId(), currentUser.getUsername(), currentUser.getName(),currentUser.getEmail(), currentUser.getGender(), currentUser.getAddress(), currentUser.getPhone(), currentUser.getRoles());
         return userSummary;
     }

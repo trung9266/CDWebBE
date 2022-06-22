@@ -30,14 +30,14 @@ public class WishListServiceImp implements IWishListService {
     WishListItemRepository wishListItemRepository;
 
     @Override
-    public Movie addMovieWishList(Long id, Long id1) {
+    public Movie addMovieWishList(Long id, String slug) {
         User user = this.userRepository.findById(id).get();
         WishList wishList = this.wishListRepository.findByUser(user);
         if (wishList == null) {
             wishList = new WishList(user);
             this.wishListRepository.save(wishList);
         }
-        Movie movie = this.movieRepository.findById(id1).get();
+        Movie movie = this.movieRepository.findBySlug(slug);
         WishListItem wishListItem = this.wishListItemRepository.findByWishListAndMovie(wishList, movie);
         if (wishListItem != null) {
             return null;
