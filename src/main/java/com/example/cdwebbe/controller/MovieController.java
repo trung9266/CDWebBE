@@ -1,6 +1,6 @@
 package com.example.cdwebbe.controller;
 
-import com.example.cdwebbe.model.Movie;
+import com.example.cdwebbe.model.*;
 import com.example.cdwebbe.payload.MovieRequest;
 import com.example.cdwebbe.payload.ResponseObject;
 import com.example.cdwebbe.repository.MovieRepository;
@@ -58,6 +58,38 @@ public class MovieController {
     public ResponseEntity viewHomePage(@RequestParam(value = "keyword") String keyword) {
         List<Movie> listProducts = movieService.listAll(keyword);
         return ResponseEntity.ok(listProducts);
+    }
+    @DeleteMapping("/deleteMovie/{id}")
+    public ResponseEntity deleteMovie(
+            @PathVariable long id
+    ) {
+        String message = movieService.deleteMovie(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Delete movie success");
+    }
+    @PutMapping("/update/{slug}")
+    public Movie updateMovie(@PathVariable(value = "slug") String slug, @RequestBody Movie m){
+        Movie movie = movieService.getMovieBySlug(slug);
+
+        if(movie!=null){
+            movie.setSlug(m.getSlug());
+            movie.setTitle(m.getTitle());
+            movie.setBackdropUrl(m.getBackdropUrl());
+            movie.setPosterUrl(m.getPosterUrl());
+            movie.getGenres().forEach(genresRequest -> {
+                m.addGenres(new Genres(genresRequest.getName()));
+            });
+            movie.setReleaseDate(m.getReleaseDate());
+            movie.setOverview(m.getOverview());
+            movie.getProductionCompanies().forEach(companyRequest -> {
+                m.addProductionCompanies(new ProductionCompany(companyRequest.getName()));
+            });
+            movie.getProductionCountries().forEach(countriesRequest -> {
+                m.addProductionCountries(new ProductionCountries(countriesRequest.getName()));
+            });
+            movie.setUrl(m.getUrl());
+            return movieService.save(movie);
+        }
+        return null;
     }
     @GetMapping("/ShowAndsearch")
     public ResponseEntity<?> showAndsearchProductEntity(@RequestParam(required = true,value = "keyword") String searchValue,

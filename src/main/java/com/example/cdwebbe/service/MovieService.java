@@ -1,6 +1,7 @@
 package com.example.cdwebbe.service;
 
 import com.example.cdwebbe.model.Movie;
+import com.example.cdwebbe.model.User;
 import com.example.cdwebbe.payload.MovieRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -15,4 +16,8 @@ public interface MovieService{
     Movie findByIdMovie(long id);
     List<Movie> listAll(String keyword);
     Map<String,Object> showAndSearchProduct(String searchValue, Pageable pageable);
+
+    String deleteMovie(long id);
+    Movie save(Movie m);
+
 }

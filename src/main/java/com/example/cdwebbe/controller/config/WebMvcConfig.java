@@ -1,4 +1,4 @@
-package com.example.cdwebbe.config;
+package com.example.cdwebbe.controller.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
