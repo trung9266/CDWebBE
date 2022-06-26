@@ -1,4 +1,4 @@
-package com.example.cdwebbe.config;
+package com.example.cdwebbe.controller.config;
 
 import com.example.cdwebbe.security.CustomUserDetailsService;
 import com.example.cdwebbe.security.JwtAuthenticationEntryPoint;

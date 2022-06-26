@@ -99,6 +99,23 @@ public class MovieServiceImpl implements MovieService {
         result.put("totalPage",pageTuts.getTotalPages());
         return result ;
     }
+
+    @Override
+    public String deleteMovie(long id) {
+        boolean isExist = movieRepository.existsById(id);
+        if(isExist){
+            movieRepository.deleteById(id);
+            return "Delete movie success";
+        }else{
+            return "Movie is not exist";
+        }
+    }
+
+    @Override
+    public Movie save(Movie m) {
+        return movieRepository.save(m);
+    }
+
     public List<MovieResponse> covertProductEntityToResponse(List<Movie> productDetailEntities){
         List<MovieResponse> responseList = new ArrayList<>();
         for (Movie productEntity :productDetailEntities) {
