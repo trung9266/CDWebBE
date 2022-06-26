@@ -26,6 +26,6 @@ public class HistoryItem extends DateAudit {
     private Movie movie ;
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "wishListId",referencedColumnName = "id")
+    @JoinColumn(name = "historyId",referencedColumnName = "id")
     private History history ;
 }

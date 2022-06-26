@@ -48,6 +48,7 @@ public class WishListServiceImp implements IWishListService {
         return movie;
     }
 
+
     @Override
     public List<WishListItem> findAll(Specification<WishListItem> spec, Pageable pageable) {
         return this.wishListItemRepository.findAll(spec,pageable).getContent();

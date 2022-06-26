@@ -61,7 +61,7 @@ public class MovieController {
     }
     @GetMapping("/ShowAndsearch")
     public ResponseEntity<?> showAndsearchProductEntity(@RequestParam(required = true,value = "keyword") String searchValue,
-                                                        @RequestParam(defaultValue = "0") int pageIndex,  @RequestParam(defaultValue = "10") int pageSize){
+                                                        @RequestParam(defaultValue = "0") int pageIndex,  @RequestParam(defaultValue = "5") int pageSize){
 
         Pageable pageable = PageRequest.of(pageIndex,pageSize);
         Map<String,Object> result= this.movieService.showAndSearchProduct(searchValue,pageable);

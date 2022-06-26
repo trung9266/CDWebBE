@@ -95,6 +95,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .permitAll()
                     .antMatchers("/api/wishlist/**")
                         .permitAll()
+                    .antMatchers("/api/history/**")
+                        .permitAll()
                     .anyRequest()
                         .authenticated();
 

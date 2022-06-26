@@ -34,12 +34,11 @@ public class HistoryController {
     ModelMapper mapper;
     @Autowired
     MovieService movieService;
-    @PostMapping("/addHistory")
+    @PostMapping("/addHistory/{slug}")
     public ResponseEntity<?> addHistory(@PathVariable(value = "slug") String slug,@RequestBody WishListRequest info) {
-        Movie toCartResponse = iHistoryService.addMovieHistory(info.getId(),slug);
+        Movie history = iHistoryService.addMovieHistory(info.getId(),slug);
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(HttpStatus.OK.value(), "successful!", toCartResponse));
-
+                new ResponseObject(HttpStatus.OK.value(), "successful!", history));
     }
     @PostMapping("/findAll")
     public ResponseEntity<?> findAll(@RequestParam(value = "action") String action, @RequestParam(required = false ) Long favProductId,
