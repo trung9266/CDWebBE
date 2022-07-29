@@ -18,6 +18,4 @@ import java.time.Instant;
 public class HistoryItemResponse {
     private Movie movie ;
     private History history ;
-    @LastModifiedDate
-    private Instant updatedAt;
 }

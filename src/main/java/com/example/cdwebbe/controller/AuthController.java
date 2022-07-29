@@ -4,10 +4,7 @@ import com.example.cdwebbe.exception.AppException;
 import com.example.cdwebbe.model.Role;
 import com.example.cdwebbe.model.RoleName;
 import com.example.cdwebbe.model.User;
-import com.example.cdwebbe.payload.ApiResponse;
-import com.example.cdwebbe.payload.JwtAuthenticationResponse;
-import com.example.cdwebbe.payload.LoginRequest;
-import com.example.cdwebbe.payload.SignUpRequest;
+import com.example.cdwebbe.payload.*;
 import com.example.cdwebbe.repository.RoleRepository;
 import com.example.cdwebbe.repository.UserRepository;
 import com.example.cdwebbe.security.JwtTokenProvider;
@@ -19,6 +16,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -160,6 +158,39 @@ public class AuthController {
         String message = userService.deleteUser(id);
         return ResponseEntity.status(HttpStatus.OK).body("Delete user success");
     }
+    @PostMapping("forgotpassword")
+    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest emailDTO) throws MessagingException {
+        boolean isExist = userRepository.existsByEmail(emailDTO.getEmail());
+        if(isExist){
+            User u = userService.getUserByEmail(emailDTO.getEmail());
+            char[] arrPass = userService.generatePassword(6);
+            String newPassword = String.valueOf(arrPass);
+            System.out.println(newPassword);
+            sendPlainTextEmail("smtp.gmail.com", "587", "tmdt.test1234@gmail.com", "pbpxgmcvuzlydxbw", u.getEmail(), "Change Password successfully", "Change password successful, your new password is: " + newPassword);
+            u.setPassword(passwordEncoder.encode(newPassword));
+            User result = userRepository.save(u);
+            return ResponseEntity.status(HttpStatus.OK).body("Change Password Success");
+        }else{
+            return ResponseEntity.status(HttpStatus.OK).body("Can't Find User");
+        }
 
-
+    }
+    @PostMapping("changepassword")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest changPassDTO) throws MessagingException {
+        boolean isExist = userRepository.existsByEmail(changPassDTO.getEmail());
+        if(isExist){
+            User u = userService.getUserByEmail(changPassDTO.getEmail());
+            boolean validPassword = BCrypt.checkpw(changPassDTO.getPassword(), u.getPassword());
+            if (validPassword){
+                sendPlainTextEmail("smtp.gmail.com", "587", "tmdt.test1234@gmail.com", "pbpxgmcvuzlydxbw", u.getEmail(), "Change Password successfully", "Change password successful, your new password is: " + changPassDTO.getNewPassword());
+                u.setPassword(passwordEncoder.encode(changPassDTO.getNewPassword()));
+                User result = userRepository.save(u);
+                return ResponseEntity.status(HttpStatus.OK).body("Change Password Success");
+            }else{
+                return ResponseEntity.status(HttpStatus.OK).body("Password invalid");
+            }
+        }else{
+            return ResponseEntity.status(HttpStatus.OK).body("Can't Find User");
+        }
+    }
 }

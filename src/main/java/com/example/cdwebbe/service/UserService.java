@@ -7,4 +7,7 @@ public interface UserService {
     User getUserById(Long id);
     User save(User u);
     User findById(Long id);
+    public char[] generatePassword(int length);
+
+    User getUserByEmail(String email);
 }

@@ -41,7 +41,7 @@ public class HistoryController {
                 new ResponseObject(HttpStatus.OK.value(), "successful!", history));
     }
     @PostMapping("/findAll")
-    public ResponseEntity<?> findAll(@RequestParam(value = "action") String action, @RequestParam(required = false ) Long favProductId,
+    public ResponseEntity<?> findAll(@RequestParam(value = "action") String action, @RequestParam(required = false ) String favProductId,
                                      @RequestParam(defaultValue ="0" ) int pageIndex, @RequestParam(defaultValue = "10") int pageSize,@RequestBody WishListRequest info){
 
         User user = this.userService.findById(info.getId());
@@ -57,7 +57,7 @@ public class HistoryController {
         if(action.equals("show")){
             historyItem = this.iHistoryService.findAll(spec,  pageable);
         }else if(action.equals("remove")){
-            Movie movie = this.movieService.findByIdMovie(favProductId);
+            Movie movie = this.movieService.getMovieBySlug(favProductId);
             this.iHistoryService.delete(movie);
             historyItem = this.iHistoryService.findAll(spec,  pageable);
         }
@@ -67,5 +67,6 @@ public class HistoryController {
         }
         return ResponseEntity.ok(list);
     }
+
 
 }
